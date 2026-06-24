@@ -11,13 +11,13 @@ import picocli.CommandLine.Parameters;
         description = "Compares two configuration files and shows a difference.")
 public final class App implements Runnable {
 
-    @Parameters(index = "0", description = "Path to first file")
-    private String filePath1;
+    @Parameters(index = "0", description = "path to first file")
+    private String filepath1;
 
-    @Parameters(index = "1", description = "Path to second file")
-    private String filePath2;
+    @Parameters(index = "1", description = "path to second file")
+    private String filepath2;
 
-    @Option(names = {"-f", "--format"}, description = "Output format (default: stylish)")
+    @Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
     private String format = "stylish";
 
     public static void main(String[] args) {
@@ -28,7 +28,7 @@ public final class App implements Runnable {
     @Override
     public void run() {
         try {
-            String result = Differ.generate(filePath1, filePath2);
+            String result = Differ.generate(filepath1, filepath2);
             System.out.println(result);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
