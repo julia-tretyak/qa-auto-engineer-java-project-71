@@ -14,9 +14,10 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-   checkstyle("com.puppycrawl.tools:checkstyle:10.12.0")
+    checkstyle("com.puppycrawl.tools:checkstyle:10.12.0")
     implementation("info.picocli:picocli:4.7.6")
     annotationProcessor("info.picocli:picocli:4.7.6")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0")
 }
 
 tasks.test {
