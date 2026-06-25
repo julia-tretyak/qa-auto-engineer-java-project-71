@@ -2,6 +2,7 @@ plugins {
     application
     checkstyle
     id("org.sonarqube") version "5.1.0.4882"
+    jacoco
 }
 
 group = "hexlet.code"
@@ -12,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     checkstyle("com.puppycrawl.tools:checkstyle:10.12.0")
     implementation("info.picocli:picocli:4.7.6")
     annotationProcessor("info.picocli:picocli:4.7.6")
@@ -22,6 +23,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 application {
@@ -35,6 +37,15 @@ tasks.getByName("run", JavaExec::class) {
 checkstyle {
     toolVersion = "10.12.0"
     configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    maxErrors = 0
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 sonarqube {
@@ -44,5 +55,6 @@ sonarqube {
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.sources", "src/main/java")
         property("sonar.java.binaries", "build/classes")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/html/jacocoTestReport.xml")
     }
 }
