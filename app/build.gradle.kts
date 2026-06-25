@@ -50,7 +50,4 @@ tasks.jacocoTestReport {
     }
 }
 
-sonarqube {
-    properties {
-    }
-}
+
