@@ -3,7 +3,7 @@ System.setProperty("sonar.gradle.skipCompile", "true")
 plugins {
     application
     checkstyle
-    id("org.sonarqube") version "4.4.1.3373"
+    //id("org.sonarqube") version "4.4.1.3373"
     jacoco
 }
 
@@ -52,12 +52,5 @@ tasks.jacocoTestReport {
 
 sonarqube {
     properties {
-        property("sonar.projectKey", "julia-tretyak_qa-auto-engineer-java-project-61")
-        property("sonar.organization", "julia-tretyak")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sources", "src/main/java")
-        property("sonar.java.binaries", "build/classes")
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/html/jacocoTestReport.xml")
-        property("sonar.gradle.skipCompile", "true")
     }
 }
