@@ -58,5 +58,6 @@ sonarqube {
         property("sonar.sources", "src/main/java")
         property("sonar.java.binaries", "build/classes")
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/html/jacocoTestReport.xml")
+        property("sonar.gradle.skipCompile", "true")
     }
 }
