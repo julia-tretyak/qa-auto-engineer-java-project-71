@@ -38,7 +38,7 @@ jobs:
           ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
-       env:
+        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           cd app
