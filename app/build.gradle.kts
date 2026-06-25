@@ -1,3 +1,5 @@
+System.setProperty("sonar.gradle.skipCompile", "true")
+
 plugins {
     application
     checkstyle
