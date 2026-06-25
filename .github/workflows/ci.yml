@@ -38,15 +38,8 @@ jobs:
           ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: app/
-          args: >
-            -Dsonar.organization=julia-tretyak
-            -Dsonar.projectKey=julia-tretyak_qa-auto-engineer-java-project-61
-            -Dsonar.sources=src/main/java
-            -Dsonar.java.binaries=build/classes
-            -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/html/jacocoTestReport.xml
-            -Dsonar.gradle.skipCompile=true
+        run: |
+          cd app
+          ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
