@@ -2,85 +2,67 @@ package hexlet.code;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class Differ {
-    public static String generate(String filePath1, String filePath2) throws Exception {
-        String content1 = readFile(filePath1);
-        String content2 = readFile(filePath2);
+public final class Differ {
+    public static String generate(final String filePath1, final String filePath2) throws Exception {
+        final String content1 = readFile(filePath1);
+        final String content2 = readFile(filePath2);
 
-        String format1 = getFileExtension(filePath1);
-        String format2 = getFileExtension(filePath2);
+        final String format1 = getFileExtension(filePath1);
+        final String format2 = getFileExtension(filePath2);
 
-        Map<String, Object> data1 = Parser.parse(content1, format1);
-        Map<String, Object> data2 = Parser.parse(content2, format2);
+        final Map<String, Object> data1 = Parser.parse(content1, format1);
+        final Map<String, Object> data2 = Parser.parse(content2, format2);
 
-        return buildDiff(data1, data2);
+        final List<DiffEntry> diff = buildDiff(data1, data2);
+        return StylishFormatter.format(diff);
     }
 
-    private static String readFile(String filePath) throws Exception {
+    private static String readFile(final String filePath) throws Exception {
         return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 
-    private static String getFileExtension(String filePath) {
-        int lastDot = filePath.lastIndexOf('.');
+    private static String getFileExtension(final String filePath) {
+        final int lastDot = filePath.lastIndexOf('.');
         if (lastDot == -1) {
             return "json";
         }
         return filePath.substring(lastDot + 1).toLowerCase();
     }
 
-    private static String buildDiff(Map<String, Object> data1, Map<String, Object> data2) {
-        Set<String> allKeys = new HashSet<>(data1.keySet());
+    private static List<DiffEntry> buildDiff(final Map<String, Object> data1, final Map<String, Object> data2) {
+        final Set<String> allKeys = new TreeSet<>(data1.keySet());
         allKeys.addAll(data2.keySet());
 
-        Map<String, Object> sortedKeys = new TreeMap<>();
-        for (String key : allKeys) {
-            sortedKeys.put(key, null);
-        }
+        final List<DiffEntry> result = new ArrayList<>();
 
-        List<String> lines = new ArrayList<>();
-        lines.add("{");
-
-        for (String key : sortedKeys.keySet()) {
-            boolean inFirst = data1.containsKey(key);
-            boolean inSecond = data2.containsKey(key);
+        for (final String key : allKeys) {
+            final boolean inFirst = data1.containsKey(key);
+            final boolean inSecond = data2.containsKey(key);
 
             if (inFirst && inSecond) {
-                Object value1 = data1.get(key);
-                Object value2 = data2.get(key);
+                final Object value1 = data1.get(key);
+                final Object value2 = data2.get(key);
 
-                if (value1.equals(value2)) {
-                    lines.add("    " + key + ": " + formatValue(value1));
+                if (value1 == null && value2 == null) {
+                    result.add(new DiffEntry(key, null, null, "unchanged"));
+                } else if (value1 != null && value1.equals(value2)) {
+                    result.add(new DiffEntry(key, value1, value2, "unchanged"));
                 } else {
-                    lines.add("  - " + key + ": " + formatValue(value1));
-                    lines.add("  + " + key + ": " + formatValue(value2));
+                    result.add(new DiffEntry(key, value1, value2, "changed"));
                 }
             } else if (inFirst) {
-                lines.add("  - " + key + ": " + formatValue(data1.get(key)));
+                result.add(new DiffEntry(key, data1.get(key), null, "removed"));
             } else {
-                lines.add("  + " + key + ": " + formatValue(data2.get(key)));
+                result.add(new DiffEntry(key, null, data2.get(key), "added"));
             }
         }
 
-        lines.add("}");
-        return String.join("\n", lines);
-    }
-
-    private static String formatValue(Object value) {
-        if (value instanceof String) {
-            return (String) value;
-        } else if (value instanceof Boolean) {
-            return value.toString();
-        } else if (value instanceof Number) {
-            return value.toString();
-        } else {
-            return String.valueOf(value);
-        }
+        return result;
     }
 }
