@@ -68,7 +68,7 @@ sonarqube {
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.sources", "src/main/java")
         property("sonar.java.binaries", "build/classes")
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/html/jacocoTestReport.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.gradle.skipCompile", "true")
     }
 }
