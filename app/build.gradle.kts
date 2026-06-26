@@ -7,6 +7,12 @@ plugins {
     jacoco
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
@@ -42,6 +48,10 @@ checkstyle {
     configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
     maxErrors = 0
 }
+jacoco {
+    toolVersion = "0.8.12"
+}
+
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
