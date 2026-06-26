@@ -1,6 +1,5 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -12,8 +11,14 @@ import java.util.List;
 
 public class Differ {
     public static String generate(String filePath1, String filePath2) throws Exception {
-        Map<String, Object> data1 = parseJson(readFile(filePath1));
-        Map<String, Object> data2 = parseJson(readFile(filePath2));
+        String content1 = readFile(filePath1);
+        String content2 = readFile(filePath2);
+
+        String format1 = getFileExtension(filePath1);
+        String format2 = getFileExtension(filePath2);
+
+        Map<String, Object> data1 = Parser.parse(content1, format1);
+        Map<String, Object> data2 = Parser.parse(content2, format2);
 
         return buildDiff(data1, data2);
     }
@@ -22,9 +27,12 @@ public class Differ {
         return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 
-    private static Map<String, Object> parseJson(String content) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(content, Map.class);
+    private static String getFileExtension(String filePath) {
+        int lastDot = filePath.lastIndexOf('.');
+        if (lastDot == -1) {
+            return "json";
+        }
+        return filePath.substring(lastDot + 1).toLowerCase();
     }
 
     private static String buildDiff(Map<String, Object> data1, Map<String, Object> data2) {
