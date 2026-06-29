@@ -9,7 +9,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public final class Differ {
-    public static String generate(final String filePath1, final String filePath2) throws Exception {
+    public static String generate(final String filePath1, final String filePath2)
+            throws Exception {
+        return generate(filePath1, filePath2, "stylish");
+    }
+
+    public static String generate(
+            final String filePath1,
+            final String filePath2,
+            final String format) throws Exception {
         final String content1 = readFile(filePath1);
         final String content2 = readFile(filePath2);
 
@@ -20,7 +28,7 @@ public final class Differ {
         final Map<String, Object> data2 = Parser.parse(content2, format2);
 
         final List<DiffEntry> diff = buildDiff(data1, data2);
-        return StylishFormatter.format(diff);
+        return Formatter.format(diff, format);
     }
 
     private static String readFile(final String filePath) throws Exception {
@@ -35,7 +43,9 @@ public final class Differ {
         return filePath.substring(lastDot + 1).toLowerCase();
     }
 
-    private static List<DiffEntry> buildDiff(final Map<String, Object> data1, final Map<String, Object> data2) {
+    private static List<DiffEntry> buildDiff(
+            final Map<String, Object> data1,
+            final Map<String, Object> data2) {
         final Set<String> allKeys = new TreeSet<>(data1.keySet());
         allKeys.addAll(data2.keySet());
 
