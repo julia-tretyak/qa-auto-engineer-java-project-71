@@ -98,4 +98,18 @@ class DifferTest {
         String actual = Differ.generate(file1, file2, "stylish");
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testGenerateJsonFormat() throws Exception {
+        String file1 = "src/test/resources/file1-nested.json";
+        String file2 = "src/test/resources/file2-nested.json";
+
+        String actual = Differ.generate(file1, file2, "json");
+        // Проверяем, что вывод начинается с [ и содержит ключи
+        assert actual.startsWith("[");
+        assert actual.contains("key");
+        assert actual.contains("status");
+        assert actual.contains("oldValue");
+        assert actual.contains("newValue");
+    }
 }
